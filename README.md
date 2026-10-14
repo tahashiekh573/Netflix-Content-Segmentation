@@ -1,140 +1,183 @@
-# Netflix Content Segmentation
+# Netflix Trend Forecasting Model
 
 ## Project Overview
 
-This project analyzes Netflix movies and TV shows using machine learning clustering techniques. The goal is to identify groups of content based on content type, country, release year, and audience rating.
+This project analyzes historical Netflix content additions and uses forecasting models to estimate future trends. It includes yearly trend analysis, forecasting model comparison, and an interactive Streamlit dashboard.
 
-The project uses **K-Means Clustering** to segment Netflix titles and visualizes the results to understand patterns in the dataset.
+**Task:** Task 5 (Advanced) – Netflix Trend Forecasting Model
 
 ## Objectives
 
-- Explore and analyze the Netflix dataset.
-- Clean and prepare features for machine learning.
-- Apply K-Means clustering to group similar content.
-- Evaluate clustering performance using the Silhouette Score and Inertia.
-- Visualize cluster distributions and content characteristics.
-- Summarize the main characteristics of each cluster.
+- Analyze historical Netflix content additions by year.
+- Identify trends in Movies and TV Shows.
+- Build and compare forecasting models.
+- Generate future content addition predictions.
+- Evaluate model performance using MAE and RMSE.
+- Visualize historical trends and predictions through an interactive dashboard.
 
 ## Dataset
 
-**File:** `Dataset.csv`
+**Dataset File:** `Dataset.csv`
 
-The dataset contains 8,790 Netflix titles and 10 columns.
+Important columns include:
 
-Important features include:
-
-- `show_id` — Unique identifier for each title.
-- `type` — Movie or TV Show.
-- `title` — Title of the content.
-- `director` — Director of the content.
-- `country` — Country associated with the content.
+- `type` — Content type (Movie or TV Show).
 - `date_added` — Date the title was added to Netflix.
 - `release_year` — Original release year.
-- `rating` — Content rating.
-- `duration` — Movie duration or number of seasons.
-- `listed_in` — Genre or category information.
+
+**Data limitation:** The latest `date_added` value in the dataset is September 25, 2021. Therefore, forecasts are estimates based on historical data and should not be treated as verified current Netflix counts.
+
+## Project Workflow
+
+1. Inspect and prepare the dataset.
+2. Analyze yearly Netflix content additions.
+3. Visualize historical trends and content-type patterns.
+4. Build forecasting models.
+5. Evaluate and compare model performance.
+6. Generate future forecasts.
+7. Display results in an interactive dashboard.
+
+## Forecasting Models
+
+### 1. Linear Regression
+
+Used as a baseline model to estimate trends in yearly Netflix content additions.
+
+### 2. Holt Exponential Smoothing
+
+Used as a time-series forecasting model to analyze historical trends and estimate future content additions.
+
+## Model Evaluation
+
+Models were evaluated using historical data, with 2018–2020 used as the test period.
+
+| Model | MAE | RMSE |
+|---|---:|---:|
+| Linear Regression | 1118.85 | 1125.43 |
+| Holt Exponential Smoothing | 855.33 | 1010.85 |
+
+Holt Exponential Smoothing achieved lower MAE and RMSE than Linear Regression on the selected test period. However, the evaluation period contains only three years, and the prediction errors remain substantial.
+
+## Forecast Results
+
+The final Holt model was trained using complete yearly data from 2008–2020 to generate forecasts for 2021–2025.
+
+The results are stored in `final_forecast.csv` and visualized in `final_forecast.png`.
+
+These values are model-generated estimates, not verified actual Netflix content counts. The source dataset ends in September 2021, and 2021 is only partially represented.
+
+## Interactive Dashboard
+
+The project includes an interactive Streamlit dashboard (`app.py`) with the following features:
+
+- KPI cards for total content additions and peak year.
+- Historical yearly content-addition chart.
+- Interactive historical year-range filter.
+- Movies vs TV Shows trend visualization.
+- Future forecasting chart and prediction table.
+- Forecast model comparison.
+- Model evaluation results.
+- Historical data table.
+
+## Project Files
+
+| File | Description |
+|---|---|
+| `Dataset.csv` | Original Netflix dataset |
+| `inspect_data.py` | Initial dataset inspection |
+| `analyze_trends.py` | Historical trend analysis |
+| `forecast_model.py` | Linear Regression forecasting |
+| `compare_models.py` | Forecast model comparison |
+| `final_forecast.py` | Final Holt forecasting |
+| `app.py` | Interactive Streamlit dashboard |
+| `yearly_additions.csv` | Yearly content addition counts |
+| `yearly_content_type.csv` | Yearly breakdown by content type |
+| `forecast_evaluation.csv` | Forecast evaluation results |
+| `model_comparison.csv` | Comparison of forecasting models |
+| `future_forecast.csv` | Linear Regression forecast |
+| `final_forecast.csv` | Final Holt forecast |
+| `historical_trend.png` | Historical trend visualization |
+| `content_type_trend.png` | Content-type trend visualization |
+| `model_comparison.png` | Model comparison chart |
+| `future_forecast.png` | Initial forecast chart |
+| `final_forecast.png` | Final forecast chart |
+
+Some CSV and image files are generated when the analysis scripts run.
 
 ## Technologies Used
 
 - Python
 - Pandas
+- NumPy
 - Matplotlib
 - Scikit-learn
-- NumPy
+- Statsmodels
+- Streamlit
+- Plotly
 
-## Machine Learning Workflow
+## Installation
 
-1. **Data Inspection:** Examined the dataset's dimensions, columns, missing values, and duplicate records.
-2. **Feature Preparation:** Selected `release_year`, `type`, `country`, and `rating` for clustering.
-3. **Preprocessing:** Scaled the numerical feature and applied one-hot encoding to categorical features.
-4. **Model Training:** Applied K-Means clustering with different values of K.
-5. **Model Evaluation:** Compared Inertia and Silhouette Scores for K values from 2 to 8.
-6. **Cluster Analysis:** Examined cluster sizes, content types, release years, ratings, and countries.
-7. **Visualization:** Generated charts to communicate the clustering results.
+Open PowerShell in the project directory:
 
-## Cluster Evaluation Results
-
-The model was evaluated using K values from 2 through 8.
-
-| Number of Clusters | Silhouette Score |
-|---:|---:|
-| 2 | 0.4036 |
-| 3 | 0.2191 |
-| 4 | 0.1754 |
-| 5 | 0.1785 |
-| 6 | 0.2012 |
-| 7 | 0.2157 |
-| 8 | 0.2199 |
-
-**Best evaluated result:** K = 2, with a Silhouette Score of 0.4036.
-
-The two-cluster configuration achieved the highest Silhouette Score among the tested values. A separate four-cluster model was also explored to provide more detailed content segmentation.
-
-## Project Visualizations
-
-The project generates the following visualizations:
-
-- `elbow_curve.png` — Inertia across different cluster counts.
-- `silhouette_comparison.png` — Silhouette Score comparison for K = 2 to 8.
-- `cluster_distribution.png` — Number of titles in each cluster.
-- `content_type_by_cluster.png` — Movie and TV Show distribution across clusters.
-- `average_release_year.png` — Average release year for each cluster.
-- `rating_distribution.png` — Content rating distribution across clusters.
-
-## Project Files
-
-- `Dataset.csv` — Original dataset.
-- `check_dataset.py` — Dataset inspection.
-- `prepare_features.py` — Feature preparation and encoding.
-- `train_clusters.py` — K-Means model training.
-- `analyze_clusters.py` — Cluster analysis and summary generation.
-- `visualize_clusters.py` — Cluster visualization.
-- `evaluate_clusters.py` — Clustering evaluation.
-- `clustered_netflix.csv` — Dataset containing cluster assignments.
-- `cluster_summary.csv` — Summary statistics for the clusters.
-- `cluster_evaluation.csv` — Inertia and Silhouette Scores.
-- `elbow_curve.png` — Elbow chart.
-- `silhouette_comparison.png` — Silhouette comparison chart.
-- `cluster_distribution.png` — Cluster size chart.
-- `content_type_by_cluster.png` — Content type chart.
-- `average_release_year.png` — Average release year chart.
-- `rating_distribution.png` — Rating distribution chart.
-
-## How to Run the Project
-
-### 1. Install dependencies
-
-```bash
-pip install pandas numpy matplotlib scikit-learn
+```powershell
+cd "E:\ML-Task\Netflix Trend Forecasting"
 ```
 
-### 2. Place the dataset
+Install the required libraries:
 
-Place `Dataset.csv` in the project directory.
-
-### 3. Run the scripts
-
-Execute the scripts from the project directory:
-
-```bash
-python check_dataset.py
-python prepare_features.py
-python train_clusters.py
-python analyze_clusters.py
-python visualize_clusters.py
-python evaluate_clusters.py
+```powershell
+python -m pip install pandas numpy matplotlib scikit-learn statsmodels streamlit plotly
 ```
+
+## Run the Project
+
+Run the analysis scripts in order:
+
+```powershell
+python inspect_data.py
+python analyze_trends.py
+python forecast_model.py
+python compare_models.py
+python final_forecast.py
+```
+
+## Launch the Dashboard
+
+Run:
+
+```powershell
+python -m streamlit run app.py
+```
+
+Open the local URL displayed in the terminal, usually:
+
+`http://localhost:8501`
+
+If port 8501 is already in use, run:
+
+```powershell
+python -m streamlit run app.py --server.port 8502
+```
+
+Then open:
+
+`http://localhost:8502`
+
+## Limitations and Future Improvements
+
+- The dataset only contains additions through September 25, 2021.
+- The test period covers only three years.
+- Forecasting errors remain substantial.
+- Future work could use more recent data, test additional forecasting methods, and evaluate models over a longer period.
 
 ## Conclusion
 
-This project demonstrates how unsupervised machine learning can be used to explore and segment Netflix content. K-Means clustering identifies groups based on selected metadata, while evaluation metrics and visualizations help assess and interpret the results.
+This project demonstrates a complete time-series forecasting workflow, including historical trend analysis, model development, evaluation, future prediction, and interactive visualization.
 
-The highest Silhouette Score among the tested configurations was achieved with two clusters. The four-cluster analysis provides an additional, more detailed view of the dataset.
+Holt Exponential Smoothing performed better than Linear Regression on the selected 2018–2020 test period. More recent data and further evaluation would help improve forecasting reliability.
 
-## Future Improvements
+---
 
-- Include genre and duration features in the clustering process.
-- Experiment with alternative clustering algorithms.
-- Investigate different feature combinations and scaling methods.
-- Improve the treatment of missing or unspecified metadata.
-- Compare cluster quality across multiple evaluation metrics.
+**Project Name:** Netflix Trend Forecasting Model  
+**Task:** Task 5 (Advanced)  
+**Focus:** Time Series Forecasting, Predictive Analytics, Trend Analysis, and Model Evaluation
